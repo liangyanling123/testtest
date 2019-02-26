@@ -1,0 +1,3256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>商米API详细测试报告</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.2"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
+    
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         {  }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+	font-size: 16pt;
+	color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+	margin-left: 10px;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+    margin-left: 10px;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+    margin-left: 10px;
+}
+#header_row {
+    font-weight: bold;
+    color: #606060;
+    background-color: #f5f5f5;
+    border-top-width: 10px;
+    border-color: #d6e9c6;
+	font-size: 12px;
+}
+#result_table td {
+    border: 1px solid #f5f5f5;
+    padding: 2px;
+
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #d6e9c6; }
+.failClass  { background-color: #faebcc; }
+.errorClass { background-color: #ebccd1; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+/* -- chars ---------------------------------------------------------------------- */
+.testChars {margin-left: 150px;}
+
+.btn-info1 {
+    color: #fff;
+    background-color: #d6e9c6;
+    border-color: #d6e9c6;
+}
+
+.btn-info2 {
+    color: #fff;
+    background-color: #faebcc;
+    border-color: #faebcc;
+}
+
+.btn-info3 {
+    color: #fff;
+    background-color: #ebccd1;
+    border-color: #ebccd1;
+}
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript"><!--
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+/* obsoleted by detail in <div>
+function showOutput(id, name) {
+    var w = window.open("", //url
+                    name,
+                    "resizable,scrollbars,status,width=800,height=450");
+    d = w.document;
+    d.write("<pre>");
+    d.write(html_escape(output_list[id]));
+    d.write("\n");
+    d.write("<a href='javascript:window.close()'>close</a>\n");
+    d.write("</pre>\n");
+    d.close();
+}
+*/
+--></script>
+
+<div class='heading'>
+<h1>商米API详细测试报告</h1>
+<p class='attribute'><strong>Start Time:</strong> 2019-02-26 16:33:36</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:05.127293</p>
+<p class='attribute'><strong>Status:</strong> Pass 42 Failure 23</p>
+
+<p class='description'>用例执行结果：</p>
+</div>
+
+<div style="float:left; margin-left: 10px;">
+	<p> Test Case Pie charts </p>
+	<a class="btn btn-xs btn-info1">-Pass-</a><br>
+	<a class="btn btn-xs btn-info2">-Faild-</a><br>
+	<a class="btn btn-xs btn-info3">-Error-</a><br>
+</div>
+
+<div class="testChars">
+	<canvas id="myChart" width="250" height="250"></canvas>
+</div>
+
+
+
+<p id='show_detail_line' style="margin-left: 10px;">Show
+<a href='javascript:showCase(0)' class="btn btn-xs btn-primary">Summary</a>
+<a href='javascript:showCase(1)' class="btn btn-xs btn-danger">Failed</a>
+<a href='javascript:showCase(2)' class="btn btn-xs btn-info">All</a>
+</p>
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row' class="panel-title">
+    <td>Test Group/Test case</td>
+    <td>Count</td>
+    <td>Pass</td>
+    <td>Fail</td>
+    <td>Error</td>
+    <td>View</td>
+</tr>
+
+<tr class='failClass'>
+    <td>test_employee.Employee: 人员管理</td>
+    <td>65</td>
+    <td>42</td>
+    <td>23</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c1',65)">Detail</a></td>
+</tr>
+
+<tr id='ft1.1' class='none'>
+    <td class='failCase'><div class='testcase'>test_answerinvite_14: 被邀请者拒绝加入店铺</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.1')" >
+        fail</a>
+
+    <div id='div_ft1.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.1: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/answerinvite
+data: {"msg_id":"0","sn":"V105183951996","status":"0","token":"","token_shop":"7c87ddc4a696b946b5b2d9ca5023db2a03acf861","uniqid":"9483f18c9f8a0e6482ca50a6aca5e3d9"}
+【响应结果】
+response:
+{"code":208,"data":null,"msg":"The message is expired"}
+
+用例【被邀请者拒绝加入店铺】，预期接口响应字段【msg】的值为【You has reject to join in this shop】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 614, in test_answerinvite_14
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: 'The message is expired' != 'You has reject to join in this shop'
+- The message is expired
++ You has reject to join in this shop
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.2' class='none'>
+    <td class='failCase'><div class='testcase'>test_answerinvite_15: 在其他设备已拒绝加入店铺</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.2')" >
+        fail</a>
+
+    <div id='div_ft1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.2: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/answerinvite
+data: {"msg_id":"0","sn":"V105183951996","status":"1","token":"","token_shop":"7c87ddc4a696b946b5b2d9ca5023db2a03acf861","uniqid":"9483f18c9f8a0e6482ca50a6aca5e3d9"}
+【响应结果】
+response:
+{"code":208,"data":null,"msg":"The message is expired"}
+
+用例【在其他设备已拒绝加入店铺】，预期接口响应字段【code】的值为【You has reject to join in this shop on other machine】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 637, in test_answerinvite_15
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '208' != 'You has reject to join in this shop on other machine'
+- 208
++ You has reject to join in this shop on other machine
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.3' class='none'>
+    <td class='failCase'><div class='testcase'>test_answerinvite_16: 被邀请者接受加入店铺</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.3')" >
+        fail</a>
+
+    <div id='div_ft1.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.3: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/answerinvite
+data: {"msg_id":"0","sn":"V105183951996","status":"1","token":"","token_shop":"7c87ddc4a696b946b5b2d9ca5023db2a03acf861","uniqid":"f6d2e2002b6a86b494c73ef49c994f83"}
+【响应结果】
+response:
+{"code":208,"data":null,"msg":"The message is expired"}
+
+用例【被邀请者接受加入店铺】，预期接口响应字段【code】的值为【401】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 660, in test_answerinvite_16
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '208' != '401'
+- 208
++ 401
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.4' class='none'>
+    <td class='failCase'><div class='testcase'>test_answerinvite_17: 在其他设备已经接受加入店铺了</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.4')" >
+        fail</a>
+
+    <div id='div_ft1.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.4: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/answerinvite
+data: {"msg_id":"0","sn":"V105183951996","status":"0","token":"","token_shop":"7c87ddc4a696b946b5b2d9ca5023db2a03acf861","uniqid":"f6d2e2002b6a86b494c73ef49c994f83"}
+【响应结果】
+response:
+{"code":208,"data":null,"msg":"The message is expired"}
+
+用例【在其他设备已经接受加入店铺了】，预期接口响应字段【code】的值为【302】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 683, in test_answerinvite_17
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '208' != '302'
+- 208
++ 302
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.5' class='none'>
+    <td class='failCase'><div class='testcase'>test_forbiduser_18: 店长禁用店员没有填写备注</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.5')" >
+        fail</a>
+
+    <div id='div_ft1.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.5: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"6845","status":"1","token":"","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长禁用店员没有填写备注】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 706, in test_forbiduser_18
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.6' class='none'>
+    <td class='failCase'><div class='testcase'>test_forbiduser_19: 店长启用店员</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.6')" >
+        fail</a>
+
+    <div id='div_ft1.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.6: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"6845","status":"0","token":"","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长启用店员】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 729, in test_forbiduser_19
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.7' class='none'>
+    <td class='failCase'><div class='testcase'>test_forbiduser_20: 店长禁用店员填写备注</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.7')" >
+        fail</a>
+
+    <div id='div_ft1.7' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.7').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.7: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"测试备注","shop_id":"6845","status":"0","token":"","token_shop":"","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长禁用店员填写备注】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 752, in test_forbiduser_20
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.8' class='none'>
+    <td class='failCase'><div class='testcase'>test_forbiduser_21: 店长启用店员</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.8')" >
+        fail</a>
+
+    <div id='div_ft1.8' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.8').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.8: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"6845","status":"0","token":"","token_shop":"","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长启用店员】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 775, in test_forbiduser_21
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.9' class='none'>
+    <td class='failCase'><div class='testcase'>test_forbiduser_22: 缺失forbid_remark必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.9')" >
+        fail</a>
+
+    <div id='div_ft1.9' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.9').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.9: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"shop_id":"6845","status":"0","token":"","token_shop":"","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【缺失forbid_remark必传项】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 798, in test_forbiduser_22
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.10' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_23: 缺失shop_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.10')" >
+        pass</a>
+
+    <div id='div_pt1.10' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.10').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.10: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","status":"0","token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570shop_id"}
+
+用例【缺失shop_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数shop_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.11' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_24: 缺失status必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.11')" >
+        pass</a>
+
+    <div id='div_pt1.11' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.11').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.11: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"7046","token":"","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570status"}
+
+用例【缺失status必传项】，预期接口响应字段【msg】的值为【缺少必要参数status】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.12' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_25: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.12')" >
+        pass</a>
+
+    <div id='div_pt1.12' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.12').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.12: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"7046","status":"0","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token"}
+
+用例【缺失token必传项】，预期接口响应字段【msg】的值为【缺少必要参数token】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.13' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_26: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.13')" >
+        pass</a>
+
+    <div id='div_pt1.13' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.13').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.13: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"7046","status":"0","token":"f74f95c142ee203f66d252c856739616","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token_shop"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.14' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_27: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.14')" >
+        pass</a>
+
+    <div id='div_pt1.14' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.14').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.14: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"7046","status":"0","token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id"}
+
+用例【缺失user_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.15' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_forbiduser_28: 缺失user_id_assign必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.15')" >
+        pass</a>
+
+    <div id='div_pt1.15' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.15').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.15: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/forbiduser
+data: {"forbid_remark":"","shop_id":"7046","status":"0","token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id_assign"}
+
+用例【缺失user_id_assign必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id_assign】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.16' class='none'>
+    <td class='failCase'><div class='testcase'>test_getemployeedetail_08: 店长查看店员详情</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.16')" >
+        fail</a>
+
+    <div id='div_ft1.16' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.16').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.16: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"shop_id":"6845","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"28772","user_id_employee":"1531"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长查看店员详情】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 200, in test_getemployeedetail_08
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.17' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getemployeedetail_09: 缺失shop_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.17')" >
+        pass</a>
+
+    <div id='div_pt1.17' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.17').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.17: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"token":"0f2f04f68cf6bd0ec0fa97005c4d1aff","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593","user_id_employee":"1531"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570shop_id"}
+
+用例【缺失shop_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数shop_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.18' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getemployeedetail_10: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.18')" >
+        pass</a>
+
+    <div id='div_pt1.18' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.18').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.18: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"shop_id":"7046","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593","user_id_employee":"1531"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token"}
+
+用例【缺失token必传项】，预期接口响应字段【msg】的值为【缺少必要参数token】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.19' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getemployeedetail_11: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.19')" >
+        pass</a>
+
+    <div id='div_pt1.19' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.19').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.19: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"shop_id":"7046","token":"0f2f04f68cf6bd0ec0fa97005c4d1aff","user_id":"98593","user_id_employee":"1531"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token_shop"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.20' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getemployeedetail_12: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.20')" >
+        pass</a>
+
+    <div id='div_pt1.20' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.20').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.20: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"shop_id":"7046","token":"0f2f04f68cf6bd0ec0fa97005c4d1aff","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id_employee":"1531"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id"}
+
+用例【缺失user_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.21' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getemployeedetail_13: 缺失user_id_employee必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.21')" >
+        pass</a>
+
+    <div id='div_pt1.21' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.21').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.21: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getemployeedetail
+data: {"shop_id":"7046","token":"0f2f04f68cf6bd0ec0fa97005c4d1aff","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id_employee"}
+
+用例【缺失user_id_employee必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id_employee】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.22' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_36: 获取系统消息列表</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.22')" >
+        pass</a>
+
+    <div id='div_pt1.22' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.22').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.22: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","page_size":"10","sn":"V105183951996"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【获取系统消息列表】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.23' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_37: 缺失page_num必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.23')" >
+        pass</a>
+
+    <div id='div_pt1.23' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.23').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.23: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_size":"10","sn":"V105183951996"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_num"}
+
+用例【缺失page_num必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_num】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.24' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_38: 缺失page_size必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.24')" >
+        pass</a>
+
+    <div id='div_pt1.24' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.24').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.24: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","sn":"V105183951996"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_size"}
+
+用例【缺失page_size必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_size】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.25' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_39: 缺失sn必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.25')" >
+        pass</a>
+
+    <div id='div_pt1.25' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.25').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.25: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","page_size":"10"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570sn"}
+
+用例【缺失sn必传项】，预期接口响应字段【msg】的值为【缺少必要参数sn】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.26' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_40: 获取消息列表</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.26')" >
+        pass</a>
+
+    <div id='div_pt1.26' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.26').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.26: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","page_size":"10","sn":"V105183951996","user_id":"98593"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【获取消息列表】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.27' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_41: 缺失page_num必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.27')" >
+        pass</a>
+
+    <div id='div_pt1.27' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.27').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.27: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_size":"10","sn":"V105183951996","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_num"}
+
+用例【缺失page_num必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_num】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.28' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_42: 缺失page_size必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.28')" >
+        pass</a>
+
+    <div id='div_pt1.28' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.28').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.28: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","sn":"V105183951996","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_size"}
+
+用例【缺失page_size必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_size】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.29' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_43: 缺失sn必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.29')" >
+        pass</a>
+
+    <div id='div_pt1.29' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.29').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.29: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","page_size":"10","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570sn"}
+
+用例【缺失sn必传项】，预期接口响应字段【msg】的值为【缺少必要参数sn】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.30' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getmessage_44: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.30')" >
+        pass</a>
+
+    <div id='div_pt1.30' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.30').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.30: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getmessage
+data: {"page_num":"1","page_size":"10","sn":"V105183951996"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【缺失user_id必传项】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.31' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_01: 获取店铺下的人员列表</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.31')" >
+        pass</a>
+
+    <div id='div_pt1.31' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.31').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.31: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","page_size":"10","sn":"DA03P88W00152","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【获取店铺下的人员列表】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.32' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_02: 缺失page_num必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.32')" >
+        pass</a>
+
+    <div id='div_pt1.32' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.32').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.32: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_size":"10","sn":"DA03P88W00152","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_num"}
+
+用例【缺失page_num必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_num】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.33' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_03: 缺失page_size必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.33')" >
+        pass</a>
+
+    <div id='div_pt1.33' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.33').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.33: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","sn":"DA03P88W00152","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570page_size"}
+
+用例【缺失page_size必传项】，预期接口响应字段【msg】的值为【缺少必要参数page_size】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.34' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_04: 缺失sn必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.34')" >
+        pass</a>
+
+    <div id='div_pt1.34' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.34').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.34: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","page_size":"10","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570sn"}
+
+用例【缺失sn必传项】，预期接口响应字段【msg】的值为【缺少必要参数sn】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.35' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_05: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.35')" >
+        pass</a>
+
+    <div id='div_pt1.35' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.35').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.35: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","page_size":"10","sn":"DA03P88W00152","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f","user_id":"98593"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【缺失token必传项】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.36' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_06: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.36')" >
+        pass</a>
+
+    <div id='div_pt1.36' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.36').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.36: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","page_size":"10","sn":"DA03P88W00152","token":"0f2f04f68cf6bd0ec0fa97005c4d1aff","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token_shop"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.37' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_getsnemployeelist_07: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.37')" >
+        pass</a>
+
+    <div id='div_pt1.37' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.37').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.37: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/getsnemployeelist
+data: {"page_num":"1","page_size":"10","sn":"DA03P88W00152","token":"","token_shop":"1a1f22218c48a1cede2e7ce3960a733f5f08c11f"}
+【响应结果】
+response:
+{"code":1,"data":[],"msg":""}
+
+用例【缺失user_id必传项】，预期接口响应字段【code】的值为【1】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.38' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_14: 店长邀请已注册的手机号</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.38')" >
+        fail</a>
+
+    <div id='div_ft1.38' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.38').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.38: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"13524465027","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长邀请已注册的手机号】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 338, in test_inviteemployee_14
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.39' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_15: 店长邀请已注册的邮箱</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.39')" >
+        fail</a>
+
+    <div id='div_ft1.39' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.39').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.39: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"liangyanling@sunmi.com","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长邀请已注册的邮箱】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 361, in test_inviteemployee_15
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.40' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_16: 店长邀请未注册的手机号</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.40')" >
+        fail</a>
+
+    <div id='div_ft1.40' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.40').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.40: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"17638380968","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长邀请未注册的手机号】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 384, in test_inviteemployee_16
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.41' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_17: 店长邀请未注册的邮箱</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.41')" >
+        fail</a>
+
+    <div id='div_ft1.41' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.41').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.41: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"2433889023@qq.com","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长邀请未注册的邮箱】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 407, in test_inviteemployee_17
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.42' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_18: 店长邀请自己</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.42')" >
+        fail</a>
+
+    <div id='div_ft1.42' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.42').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.42: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"17601270866","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长邀请自己】，预期接口响应字段【code】的值为【3604】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 430, in test_inviteemployee_18
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '3604'
+- 1001
++ 3604
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.43' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_19: 被邀请账号已经加入过该店铺了，不能重复邀请</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.43')" >
+        fail</a>
+
+    <div id='div_ft1.43' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.43').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.43: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"15921449923","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【被邀请账号已经加入过该店铺了，不能重复邀请】，预期接口响应字段【code】的值为【3605】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 453, in test_inviteemployee_19
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '3605'
+- 1001
++ 3605
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.44' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_20: 验证码错误</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.44')" >
+        fail</a>
+
+    <div id='div_ft1.44' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.44').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.44: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"15921449917","token":"","token_shop":"","code":"2345","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【验证码错误】，预期接口响应字段【code】的值为【3607】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 476, in test_inviteemployee_20
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '3607'
+- 1001
++ 3607
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.45' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_inviteemployee_21: 缺失shop_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.45')" >
+        pass</a>
+
+    <div id='div_pt1.45' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.45').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.45: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"user_id":"98593","username":"15921449923","token":"","token_shop":"","code":"2345","key":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570shop_id"}
+
+用例【缺失shop_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数shop_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.46' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_inviteemployee_22: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.46')" >
+        pass</a>
+
+    <div id='div_pt1.46' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.46').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.46: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"7178","username":"15921449923","token":"","token_shop":"","code":"2345","key":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id"}
+
+用例【缺失user_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.47' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_23: 缺失username必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.47')" >
+        fail</a>
+
+    <div id='div_ft1.47' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.47').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.47: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"15921339923","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【缺失username必传项】，预期接口响应字段【msg】的值为【缺少必要参数username】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 545, in test_inviteemployee_23
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: 'Permission Deny, The Account is not shop Admin' != '缺少必要参数username'
+- Permission Deny, The Account is not shop Admin
++ 缺少必要参数username
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.48' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_24: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.48')" >
+        fail</a>
+
+    <div id='div_ft1.48' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.48').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.48: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"18738943093","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【缺失token必传项】，预期接口响应字段【msg】的值为【缺少必要参数token】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 568, in test_inviteemployee_24
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: 'Permission Deny, The Account is not shop Admin' != '缺少必要参数token'
+- Permission Deny, The Account is not shop Admin
++ 缺少必要参数token
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.49' class='none'>
+    <td class='failCase'><div class='testcase'>test_inviteemployee_25: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.49')" >
+        fail</a>
+
+    <div id='div_ft1.49' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.49').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.49: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/inviteemployee
+data: {"shop_id":"6847","user_id":"28772","username":"13370090932","token":"","token_shop":"","code":"","key":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 591, in test_inviteemployee_25
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: 'Permission Deny, The Account is not shop Admin' != '缺少必要参数token_shop'
+- Permission Deny, The Account is not shop Admin
++ 缺少必要参数token_shop
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.50' class='none'>
+    <td class='failCase'><div class='testcase'>test_removeuser_29: 店长删除店员账号</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.50')" >
+        fail</a>
+
+    <div id='div_ft1.50' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.50').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.50: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"6745","token":"","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"28772","user_id_assign":"28794"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长删除店员账号】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 959, in test_removeuser_29
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.51' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_30: shop_id为70400</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.51')" >
+        pass</a>
+
+    <div id='div_pt1.51' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.51').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.51: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"70400","token":"","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【shop_id为70400】，预期接口响应字段【msg】的值为【Permission Deny, The Account is not shop Admin】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.52' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_31: 缺失shop_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.52')" >
+        pass</a>
+
+    <div id='div_pt1.52' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.52').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.52: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570shop_id"}
+
+用例【缺失shop_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数shop_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.53' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_32: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.53')" >
+        pass</a>
+
+    <div id='div_pt1.53' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.53').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.53: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"7046","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token"}
+
+用例【缺失token必传项】，预期接口响应字段【msg】的值为【缺少必要参数token】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.54' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_33: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.54')" >
+        pass</a>
+
+    <div id='div_pt1.54' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.54').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.54: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"7046","token":"f74f95c142ee203f66d252c856739616","user_id":"98593","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token_shop"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.55' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_34: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.55')" >
+        pass</a>
+
+    <div id='div_pt1.55' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.55').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.55: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"7046","token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id_assign":"698659"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id"}
+
+用例【缺失user_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.56' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_removeuser_35: 缺失user_id_assign必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.56')" >
+        pass</a>
+
+    <div id='div_pt1.56' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.56').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.56: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/removeuser
+data: {"shop_id":"7046","token":"f74f95c142ee203f66d252c856739616","token_shop":"4947a479eedf0c23d8fddefe177b13c570d0a083","user_id":"98593"}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id_assign"}
+
+用例【缺失user_id_assign必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id_assign】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.57' class='none'>
+    <td class='failCase'><div class='testcase'>test_updatepermission_48: 店长修改店员权限（店员有权限）</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.57')" >
+        fail</a>
+
+    <div id='div_ft1.57' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.57').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.57: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"6746","user_id":"28772","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"28794","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长修改店员权限（店员有权限）】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 1120, in test_updatepermission_48
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.58' class='none'>
+    <td class='failCase'><div class='testcase'>test_updatepermission_49: 店长修改店员权限（店员没有权限）</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.58')" >
+        fail</a>
+
+    <div id='div_ft1.58' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.58').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.58: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"6746","user_id":"28772","permission":"{\"machineUnbind\":\"0\"}","user_id_assign":"28794","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店长修改店员权限（店员没有权限）】，预期接口响应字段【code】的值为【1】
+
+
+case end!
+*****************************************************************************
+Traceback (most recent call last):
+  File "D:\work\test\api_test\api_test\test_case\test_employee.py", line 1143, in test_updatepermission_49
+    "预期与实际结果不一致！")  # 将字符串中所有单引号变成双引号，字符串比较时去除单双引号的影响
+AssertionError: '1001' != '1'
+- 1001
++ 1
+ : 预期与实际结果不一致！
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.59' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_50: 店员修改店员的权限</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.59')" >
+        pass</a>
+
+    <div id='div_pt1.59' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.59').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.59: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"6746","user_id":"28794","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"28794","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":1001,"data":null,"msg":"Permission Deny, The Account is not shop Admin"}
+
+用例【店员修改店员的权限】，预期接口响应字段【code】的值为【1001】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.60' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_51: 缺失shop_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.60')" >
+        pass</a>
+
+    <div id='div_pt1.60' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.60').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.60: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"user_id":"28794","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"698659","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570shop_id"}
+
+用例【缺失shop_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数shop_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.61' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_52: 缺失user_id必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.61')" >
+        pass</a>
+
+    <div id='div_pt1.61' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.61').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.61: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"6746","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"698659","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id"}
+
+用例【缺失user_id必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.62' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_53: 缺失permission必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.62')" >
+        pass</a>
+
+    <div id='div_pt1.62' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.62').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.62: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"7046","user_id":"98591","user_id_assign":"698659","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570permission"}
+
+用例【缺失permission必传项】，预期接口响应字段【msg】的值为【缺少必要参数permission】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.63' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_54: 缺失user_id_assign必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.63')" >
+        pass</a>
+
+    <div id='div_pt1.63' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.63').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.63: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"7046","user_id":"98591","permission":"{\"machineUnbind\":\"1\"}","token":"","token_shop":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570user_id_assign"}
+
+用例【缺失user_id_assign必传项】，预期接口响应字段【msg】的值为【缺少必要参数user_id_assign】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.64' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_55: 缺失token必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.64')" >
+        pass</a>
+
+    <div id='div_pt1.64' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.64').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.64: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"7046","user_id":"98591","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"698659","token_shop":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token"}
+
+用例【缺失token必传项】，预期接口响应字段【msg】的值为【缺少必要参数token】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.65' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_updatepermission_56: 缺失token_shop必传项</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.65')" >
+        pass</a>
+
+    <div id='div_pt1.65' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.65').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.65: 
+case start!
+
+接口具体请求参数与响应结果如下：
+【请求参数】
+url: http://test.api.sunmi.com/api/merchant/app/employee/1.0/
+method: post
+params: service=/updatepermission
+data: {"shop_id":"7046","user_id":"98591","permission":"{\"machineUnbind\":\"1\"}","user_id_assign":"698659","token":""}
+【响应结果】
+response:
+{"code":-1,"data":null,"msg":"\u7f3a\u5c11\u5fc5\u8981\u53c2\u6570token_shop"}
+
+用例【缺失token_shop必传项】，预期接口响应字段【msg】的值为【缺少必要参数token_shop】
+
+接口响应结果与预期一致，测试通过！
+
+case end!
+*****************************************************************************
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='total_row'>
+    <td>Total</td>
+    <td>65</td>
+    <td class="text text-success">42</td>
+    <td class="text text-danger">23</td>
+    <td class="text text-warning">0</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+
+<div id='ending'>&nbsp;</div>
+
+    <script type="text/javascript">
+var data = [
+	{
+		value: 0,
+		color: "#ebccd1",
+		label: "Error",
+		labelColor: 'white',
+		labelFontSize: '16'
+	},
+	{
+		value : 23,
+		color : "#faebcc",
+		label: "Fail",
+		labelColor: 'white',
+		labelFontSize: '16'
+	},
+	{
+		value : 42,
+		color : "#d6e9c6",
+		label : "Pass",
+		labelColor: 'white',
+		labelFontSize: '16'
+	}			
+]
+
+var newopts = {
+     animationSteps: 100,
+ 		animationEasing: 'easeInOutQuart',
+}
+
+//Get the context of the canvas element we want to select
+var ctx = document.getElementById("myChart").getContext("2d");
+
+var myNewChart = new Chart(ctx).Pie(data,newopts);
+
+</script>
+	
+</body>
+</html>
